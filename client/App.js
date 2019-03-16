@@ -3,6 +3,7 @@ import axios from 'axios'
 import { HashRouter, Route } from 'react-router-dom'
 import Navbar from './Navbar'
 import ProductList from './ProductList'
+import CreateProductForm from './CreateProductForm'
 
 class App extends Component {
   constructor() {
@@ -38,7 +39,7 @@ class App extends Component {
   render() {
     const products = this.state.products
     return (
-      <div>
+      <div className="container">
         <h1>Acme Products</h1>
         <HashRouter>
           <Route
@@ -68,7 +69,10 @@ class App extends Component {
               />
             )}
           />
-          <Route path="/products/create" />
+          <Route
+            path="/products/create"
+            render={() => <CreateProductForm onSubmit={this.onSubmit} />}
+          />
         </HashRouter>
       </div>
     )

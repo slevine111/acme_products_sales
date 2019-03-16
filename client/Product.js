@@ -5,7 +5,7 @@ const Product = ({ product, deleteProduct }) => {
   return (
     <ul>
       <li>{Name}</li>
-      <li>{Price}</li>
+      <li className={`${DiscountPrice < Price ? 'on-sale' : ''}`}>{Price}</li>
       {DiscountPrice < Price && <li>{DiscountPrice}</li>}
       <li>{Availability}</li>
       <button type="submit" onClick={() => deleteProduct(id)}>
