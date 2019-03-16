@@ -12,6 +12,7 @@ class App extends Component {
       products: []
     }
     this.deleteProduct = this.deleteProduct.bind(this)
+    this.loadProducts = this.loadProducts.bind(this)
     this.onSubmit = this.onSubmit.bind(this)
   }
 
@@ -71,7 +72,9 @@ class App extends Component {
           />
           <Route
             path="/products/create"
-            render={() => <CreateProductForm onSubmit={this.onSubmit} />}
+            render={({ history }) => (
+              <CreateProductForm onSubmit={this.onSubmit} history={history} />
+            )}
           />
         </HashRouter>
       </div>
