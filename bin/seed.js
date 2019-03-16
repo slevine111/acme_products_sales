@@ -4,11 +4,19 @@ const Product = require('../server/DataAccess/models/index')
 const syncAndSeed = () => {
   return dbInit(true)
     .then(() => {
-      return Product.create({
-        Name: 'Foo',
-        Price: 100.056,
-        Availability: 'instock'
-      })
+      return Promise.all([
+        Product.create({
+          Name: 'Foo',
+          Price: 100.056,
+          Availability: 'instock'
+        }),
+        Product.create({
+          Name: 'Baz',
+          Price: 30,
+          DiscountPercentage: 90,
+          Availability: 'backordered'
+        })
+      ])
     })
     .then(() => console.log('data successfully seeded'))
     .catch(err => {

@@ -2,6 +2,7 @@ import React, { Component } from 'react'
 import axios from 'axios'
 import { HashRouter, Route } from 'react-router-dom'
 import Navbar from './Navbar'
+import ProductList from './ProductList'
 
 class App extends Component {
   constructor() {
@@ -35,15 +36,38 @@ class App extends Component {
   }
 
   render() {
-    console.log(this.state.products)
+    const products = this.state.products
     return (
       <div>
         <h1>Acme Products</h1>
         <HashRouter>
-          <Route render={({ location }) => <Navbar location={location} />} />
+          <Route
+            render={({ location }) => (
+              <Navbar location={location} products={products} />
+            )}
+          />
           <Route exact path="/" render={() => <h2>Welcome!!</h2>} />
-          <Route exact path="/products" />
-          <Route path="/products/sales" />
+          <Route
+            exact
+            path="/products"
+            render={() => (
+              <ProductList
+                products={products}
+                deleteProduct={this.deleteProduct}
+              />
+            )}
+          />
+          <Route
+            path="/products/sales"
+            render={() => (
+              <ProductList
+                products={products.filter(
+                  product => product.DiscountPrice < product.Price
+                )}
+                deleteProduct={this.deleteProduct}
+              />
+            )}
+          />
           <Route path="/products/create" />
         </HashRouter>
       </div>

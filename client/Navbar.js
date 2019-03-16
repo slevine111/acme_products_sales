@@ -1,7 +1,7 @@
 import React from 'react'
 import { HashRouter, Link } from 'react-router-dom'
 
-const Navbar = ({ location }) => {
+const Navbar = ({ location, products }) => {
   const path = location.pathname
   return (
     <HashRouter>
@@ -16,7 +16,7 @@ const Navbar = ({ location }) => {
             to="/products"
             className={`nav-link ${path === '/products' ? 'active' : ''}`}
           >
-            Products
+            {`Products ${products.length}`}
           </Link>
         </li>
         <li className="nav-item">
@@ -24,7 +24,9 @@ const Navbar = ({ location }) => {
             to="/products/sales"
             className={`nav-link ${path === '/products/sales' ? 'active' : ''}`}
           >
-            Sale Products
+            {`Sale Products ${
+              products.filter(product => product.DiscountPercentage > 0).length
+            }`}
           </Link>
         </li>
         <li className="nav-item">
