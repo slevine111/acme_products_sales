@@ -32,3 +32,14 @@ app.delete('/api/products/:id', (req, res, next) => {
     .then(() => res.sendStatus(204))
     .catch(next)
 })
+
+app.use((req, res, next) => {
+  const error = new Error('Resource Not Found')
+  error.status = 404
+  next(error)
+})
+
+app.use((err, req, res, next) => {
+  console.error(err)
+  res.status(err.status || 500).send(err.message || 'Internal Server Error')
+})

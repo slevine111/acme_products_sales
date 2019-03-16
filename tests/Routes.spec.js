@@ -3,7 +3,7 @@ const app = require('supertest')(require('../server/api/index'))
 const Product = require('../server/DataAccess/models/index')
 const syncAndSeed = require('../bin/seed')
 
-describe.only('Routes', () => {
+describe('Routes', () => {
   beforeEach(() => {
     return syncAndSeed()
   })
@@ -116,6 +116,19 @@ describe.only('Routes', () => {
           done()
         })
         .catch(err => done(err))
+    })
+  })
+
+  describe('Any other route/error-handling middleware', () => {
+    it("any other route that does not serve up a static file returns a 404 error with message 'Resource Not Found'", done => {
+      app
+        .get('/api/notroute')
+        .expect(404)
+        .end((err, response) => {
+          if (err) return done(err)
+          expect(response.text).to.equal('Resource Not Found')
+          done()
+        })
     })
   })
 })
