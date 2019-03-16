@@ -17,4 +17,4 @@ const syncAndSeed = () => {
     })
 }
 
-syncAndSeed()
+module.exports = syncAndSeed

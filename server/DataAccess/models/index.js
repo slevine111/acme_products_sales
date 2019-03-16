@@ -11,7 +11,7 @@ const Product = connection.define('product', {
     type: Sequelize.DECIMAL,
     allowNull: false,
     get() {
-      return Math.round(this.getDataValue('Price'), 2)
+      return Number(Number(this.getDataValue('Price')).toFixed(2))
     }
   },
   DiscountPercentage: {
@@ -22,14 +22,17 @@ const Product = connection.define('product', {
     }
   },
   Availability: {
-    type: Sequelize.ENUM('instock', 'backordered', 'discontinued')
+    type: Sequelize.ENUM('instock', 'backordered', 'discontinued'),
+    allowNull: false
   },
   DiscountPrice: {
     type: Sequelize.VIRTUAL,
     get() {
-      return Math.round(
-        this.get('Price') * this.getDataValue('DiscountPercentage'),
-        2
+      return Number(
+        Number(
+          this.get('Price') *
+            (1 - this.getDataValue('DiscountPercentage') * 0.01)
+        ).toFixed(2)
       )
     }
   }
