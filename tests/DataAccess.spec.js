@@ -1,4 +1,3 @@
-const { expect } = require('chai')
 const syncAndSeed = require('../bin/seed')
 const Product = require('../server/DataAccess/models/index')
 
@@ -7,12 +6,12 @@ describe('Product Model', () => {
     return syncAndSeed()
   })
 
-  it('it has Name, Price, DiscountPercentage, and Availability fields', () => {
+  test('it has Name, Price, DiscountPercentage, and Availability fields', () => {
     return Product.findByPk(1).then(product => {
-      expect(product.Name).to.not.be.undefined
-      expect(product.Price).to.not.be.undefined
-      expect(product.DiscountPercentage).to.not.be.undefined
-      expect(product.Availability).to.not.be.undefined
+      expect(product.Name).toBeDefined()
+      expect(product.Price).toBeDefined()
+      expect(product.DiscountPercentage).toBeDefined()
+      expect(product.Availability).toBeDefined()
     })
   })
 
@@ -30,7 +29,7 @@ describe('Product Model', () => {
           error = err
         })
         .then(() =>
-          expect(error.message).to.equal(
+          expect(error.message).toBe(
             'notNull Violation: product.Name cannot be null'
           )
         )
@@ -48,7 +47,7 @@ describe('Product Model', () => {
         .catch(err => {
           error = err
         })
-        .then(() => expect(error.message).to.equal('Validation error'))
+        .then(() => expect(error.message).toBe('Validation error'))
     })
   })
   describe('Price field', () => {
@@ -65,7 +64,7 @@ describe('Product Model', () => {
           error = err
         })
         .then(() =>
-          expect(error.message).to.equal(
+          expect(error.message).toBe(
             'notNull Violation: product.Price cannot be null'
           )
         )
@@ -83,8 +82,8 @@ describe('Product Model', () => {
           Availability: 'instock'
         })
       ]).then(([bar, bazz]) => {
-        expect(bar.Price).to.equal(120.57)
-        expect(bazz.Price).to.equal(120.56)
+        expect(bar.Price).toBe(120.57)
+        expect(bazz.Price).toBe(120.56)
       })
     })
   })
@@ -94,7 +93,7 @@ describe('Product Model', () => {
         Name: 'Bar',
         Price: 100,
         Availability: 'instock'
-      }).then(product => expect(product.DiscountPercentage).to.equal(0))
+      }).then(product => expect(product.DiscountPercentage).toBe(0))
     })
     it('it has a maximum value of 100', () => {
       let error
@@ -111,7 +110,7 @@ describe('Product Model', () => {
           error = err
         })
         .then(() =>
-          expect(error.message).to.equal(
+          expect(error.message).toBe(
             'Validation error: Validation max on DiscountPercentage failed'
           )
         )
@@ -131,7 +130,7 @@ describe('Product Model', () => {
           error = err
         })
         .then(() =>
-          expect(error.message).to.equal(
+          expect(error.message).toBe(
             'notNull Violation: product.Availability cannot be null'
           )
         )
@@ -150,7 +149,7 @@ describe('Product Model', () => {
           error = err
         })
         .then(() =>
-          expect(error.message).to.equal(
+          expect(error.message).toBe(
             'invalid input value for enum "enum_products_Availability": "not allowed"'
           )
         )
@@ -163,7 +162,7 @@ describe('Product Model', () => {
         Price: 10.289,
         DiscountPercentage: 60,
         Availability: 'instock'
-      }).then(product => expect(product.DiscountPrice).to.equal(4.12))
+      }).then(product => expect(product.DiscountPrice).toBe(4.12))
     })
   })
 })

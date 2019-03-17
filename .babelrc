@@ -1,13 +1,33 @@
 {
-  "presets": [
-    "react",
-    [
-      "env",
-      {
-        "targets": {
-          "browsers": ["last 2 versions"]
-        }
-      }
-    ]
-  ]
+  "env": {
+    "dev": {
+      "presets": [
+        "react",
+        [
+          "env",
+          {
+            "targets": {
+              "browsers": ["last 2 versions"],
+              "node": "current"
+            }
+          }
+        ]
+      ]
+    },
+    "test": {
+      "presets": [
+        "react",
+        [
+          "env",
+          {
+            "targets": {
+              "browsers": ["last 2 versions"],
+              "node": "current"
+            }
+          }
+        ]
+      ],
+      "test": ["jest"]
+    }
+  }
 }

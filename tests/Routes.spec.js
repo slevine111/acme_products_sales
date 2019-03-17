@@ -1,4 +1,4 @@
-const { expect } = require('chai')
+//const { expect } = require('chai')
 const app = require('supertest')(require('../server/api/index'))
 const Product = require('../server/DataAccess/models/index')
 const syncAndSeed = require('../bin/seed')
@@ -9,7 +9,7 @@ describe('Routes', () => {
   })
 
   describe('GET / route', () => {
-    it('it returns a HTML file', done => {
+    test('it returns a HTML file', done => {
       app
         .get('/')
         .expect(200)
@@ -25,11 +25,16 @@ describe('Routes', () => {
         .expect('Content-Type', /application\/json/, done)
     })
     it('it returns all products in the database', done => {
-      app.get('/api/products').end((err, response) => {
-        if (err) return done(err)
-        expect(response.body.length).to.equal(1)
-        done()
-      })
+      app
+        .get('/api/products')
+        .then(({ body }) => {
+          return Promise.all([body, Product.findAll()])
+        })
+        .then(([apiResult, dbResult]) => {
+          expect(apiResult.length).toBe(dbResult.length)
+          done()
+        })
+        .catch(err => done(err))
     })
   })
   describe('POST /api/products', () => {
@@ -54,11 +59,11 @@ describe('Routes', () => {
         })
         .end((err, response) => {
           if (err) return done(err)
-          expect(response.body.Name).to.equal('Item')
-          expect(response.body.Price).to.equal(2)
-          expect(response.body.DiscountPercentage).to.equal(0)
-          expect(response.body.Availability).to.equal('instock')
-          expect(response.body.DiscountPrice).to.equal(2)
+          expect(response.body.Name).toBe('Item')
+          expect(response.body.Price).toBe(2)
+          expect(response.body.DiscountPercentage).toBe(0)
+          expect(response.body.Availability).toBe('instock')
+          expect(response.body.DiscountPrice).toBe(2)
           done()
         })
     })
@@ -77,7 +82,7 @@ describe('Routes', () => {
           })
         })
         .then(productFound => {
-          expect(productFound).to.not.be.null
+          expect(productFound).toEqual(expect.anything())
           done()
         })
         .catch(err => done(err))
@@ -97,7 +102,7 @@ describe('Routes', () => {
           error = err
         })
         .then(() => {
-          expect(error.message).to.equal('error was caught by next')
+          expect(error.message).toBe('error was caught by next')
           done()
         })
         .catch(err => done(err))
@@ -112,7 +117,7 @@ describe('Routes', () => {
         .delete('/api/products/1')
         .then(() => Product.findByPk(1))
         .then(productFound => {
-          expect(productFound).to.be.null
+          expect(productFound).toBeNull()
           done()
         })
         .catch(err => done(err))
@@ -126,7 +131,7 @@ describe('Routes', () => {
         .expect(404)
         .end((err, response) => {
           if (err) return done(err)
-          expect(response.text).to.equal('Resource Not Found')
+          expect(response.text).toBe('Resource Not Found')
           done()
         })
     })
