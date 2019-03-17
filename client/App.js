@@ -74,7 +74,11 @@ class App extends Component {
           <Route
             path="/products/create"
             render={({ history }) => (
-              <CreateProductForm onSubmit={this.onSubmit} history={history} />
+              <CreateProductForm
+                onSubmit={this.onSubmit}
+                history={history}
+                productNames={products.map(product => product.Name)}
+              />
             )}
           />
         </HashRouter>

@@ -9,6 +9,12 @@ class CreateProductForm extends Component {
       DiscountPercentage: '',
       Availability: 'instock',
       error: '',
+      textTips: {
+        Name: 'Field is required',
+        Price: 'Field is required',
+        DiscountPercentage:
+          'Must be non-decimal number between 0 and 100. Value will be 0 if not put in.'
+      },
       nameFieldHasBeenClicked: false,
       priceFieldHasBeenClicked: false,
       discountPercentageAllowed: true
@@ -30,6 +36,20 @@ class CreateProductForm extends Component {
     })
   }
 
+  componentWillUnmount() {
+    document
+      .querySelector('#name-input')
+      .removeEventListener('focusout', () => {
+        this.updateStateFieldHasBeenClicked('name')
+      })
+
+    document
+      .querySelector('#price-input')
+      .removeEventListener('focusout', () => {
+        this.updateStateFieldHasBeenClicked('price')
+      })
+  }
+
   updateStateFieldHasBeenClicked(productProperty) {
     this.setState(curState => {
       curState[`${productProperty}FieldHasBeenClicked`] = true
@@ -38,26 +58,19 @@ class CreateProductForm extends Component {
   }
 
   showFieldTextTip(field) {
-    const textTips = {
-      Name: {
-        text: 'Field is required',
-        keep: this.state.Name === ''
-      },
-      Price: {
-        text: 'Field is required',
-        keep: this.state.Price === ''
-      },
-      DiscountPercentage: {
-        text:
-          'Must be non-decimal number between 0 and 100. Value will be 0 if not put in.',
-        keep: true
-      }
-    }
+    const {
+      textTips,
+      nameFieldHasBeenClicked,
+      priceFieldHasBeenClicked,
+      discountPercentageAllowed
+    } = this.state
+
+    const keep = field === 'DiscountPercentage' ? true : textTips[field] !== ''
 
     const useRedFont = {
-      Name: this.state.Name === '' && this.state.nameFieldHasBeenClicked,
-      Price: this.state.Price === '' && this.state.priceFieldHasBeenClicked,
-      DiscountPercentage: !this.state.discountPercentageAllowed
+      Name: textTips.Name !== '' && nameFieldHasBeenClicked,
+      Price: textTips.Name !== '' && priceFieldHasBeenClicked,
+      DiscountPercentage: !discountPercentageAllowed
     }
 
     return (
@@ -65,20 +78,43 @@ class CreateProductForm extends Component {
         <small
           className={`help-text-size ${useRedFont[field] ? 'red-font' : ''}`}
         >
-          {textTips[field].keep ? textTips[field].text : ''}
+          {keep ? textTips[field] : ''}
         </small>
       </div>
     )
   }
 
+  // eslint-disable-next-line complexity
   onChange({ target }) {
+    this.setState({ [target.name]: target.value })
     if (target.name === 'DiscountPercentage') {
       this.setState({
         discountPercentageAllowed:
           /^([0-9]{1,2}|100)$/.test(target.value) || target.value === ''
       })
+    } else if (target.name === 'Name') {
+      const textTip =
+        target.value === ''
+          ? 'Field is required'
+          : this.props.productNames.includes(target.value)
+          ? 'Product has already been added. Add another product'
+          : ''
+      this.setState(curState => {
+        curState.textTips.Name = textTip
+        return curState
+      })
+    } else if (target.name === 'Price') {
+      const textTip =
+        target.value === ''
+          ? 'Field is required'
+          : !/^[0-9]+\.{0,1}[0-9]{0,2}$/.test(target.value)
+          ? 'Value does not match currency format (Only two decimal points at most allowed)'
+          : ''
+      this.setState(curState => {
+        curState.textTips.Price = textTip
+        return curState
+      })
     }
-    this.setState({ [target.name]: target.value })
   }
 
   onSubmit(event) {
@@ -91,10 +127,13 @@ class CreateProductForm extends Component {
           `/products${this.state.DiscountPercentage > 0 ? '/sales' : ''}`
         )
       )
+      .catch(error => {
+        this.setState({ error: error.message })
+      })
   }
 
+  // eslint-disable-next-line complexity
   render() {
-    //pattern="[0-9.]+"
     const {
       Name,
       Price,
@@ -102,10 +141,13 @@ class CreateProductForm extends Component {
       Availability,
       nameFieldHasBeenClicked,
       priceFieldHasBeenClicked,
-      discountPercentageAllowed
+      discountPercentageAllowed,
+      textTips,
+      error
     } = this.state
     const canNotSubmit =
-      [Name, Price, Availability].includes('') ||
+      textTips.Name !== '' ||
+      textTips.Price !== '' ||
       !this.state.discountPercentageAllowed
     return (
       <form onSubmit={this.onSubmit}>
@@ -115,7 +157,9 @@ class CreateProductForm extends Component {
             id="name-input"
             type="text"
             className={`form-control ${
-              Name === '' && nameFieldHasBeenClicked ? 'red-border' : ''
+              textTips.Name !== '' && nameFieldHasBeenClicked
+                ? 'red-border'
+                : ''
             }`}
             name="Name"
             value={Name}
@@ -129,7 +173,9 @@ class CreateProductForm extends Component {
             id="price-input"
             type="text"
             className={`form-control ${
-              Price === '' && priceFieldHasBeenClicked ? 'red-border' : ''
+              textTips.Price !== '' && priceFieldHasBeenClicked
+                ? 'red-border'
+                : ''
             }`}
             name="Price"
             value={Price}
@@ -163,6 +209,12 @@ class CreateProductForm extends Component {
             <option>discontinued</option>
           </select>
         </div>
+
+        {error !== '' && (
+          <div className="alert alert-danger" role="alert">
+            A network error has occured
+          </div>
+        )}
 
         <button
           type="submit"
