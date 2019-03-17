@@ -22,6 +22,8 @@ app.get('/api/products', (req, res, next) => {
 })
 
 app.post('/api/products', (req, res, next) => {
+  console.log(req.body)
+  console.log('got to here')
   return Product.create(req.body)
     .then(newProduct => res.json(newProduct))
     .catch(next)
@@ -40,6 +42,9 @@ app.use((req, res, next) => {
 })
 
 app.use((err, req, res, next) => {
+  console.log('got to error handling')
+  console.log(err.status)
+  console.log(err.message)
   console.error(err)
   res.status(err.status || 500).send(err.message || 'Internal Server Error')
 })

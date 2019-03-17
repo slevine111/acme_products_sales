@@ -5,7 +5,10 @@ const Product = connection.define('product', {
   Name: {
     type: Sequelize.STRING,
     allowNull: false,
-    unique: true
+    unique: true,
+    validate: {
+      notEmpty: true
+    }
   },
   Price: {
     type: Sequelize.DECIMAL,

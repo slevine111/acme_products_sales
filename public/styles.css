@@ -1,3 +1,19 @@
 .on-sale {
   text-decoration: line-through;
 }
+
+.disabled {
+  cursor: not-allowed;
+}
+
+.red-border {
+  border-color: red;
+}
+
+.help-text-size {
+  font-size: 14px;
+}
+
+.red-font {
+  color: red;
+}

@@ -32,6 +32,7 @@ class App extends Component {
   }
 
   onSubmit(newProduct) {
+    newProduct.DiscountPercentage = newProduct.DiscountPercentage || 0
     return axios
       .post('/api/products', newProduct)
       .then(() => this.loadProducts())
