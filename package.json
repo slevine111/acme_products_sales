@@ -8,18 +8,12 @@
     "start:dev": "npm run start-server & npm run build-watch",
     "start-server": "nodemon server/main.js --watch server -e js,html",
     "build-watch": "BABEL_ENV=dev webpack -w",
-    "test": "./node_modules/mocha/bin/mocha ./tests/*.spec.js --watch",
-    "test:jest": "jest ./tests/DataAccess.spec.js --watch --runInBand --silent",
+    "test": "jest ./tests/*.spec.js --watch --runInBand --silent",
     "seed": "node bin/runSeed.js"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
-  "jest": {
-    "transform": {
-      "^.+\\.jsx?$": "babel-jest"
-    }
-  },
   "dependencies": {
     "axios": "^0.18.0",
     "axios-mock-adapter": "^1.16.0",
@@ -27,6 +21,7 @@
     "babel-jest": "^23.6.0",
     "babel-loader": "^7.1.5",
     "babel-preset-env": "^1.7.0",
+    "babel-preset-jest": "^24.3.0",
     "babel-preset-react": "^6.24.1",
     "enzyme": "^3.9.0",
     "enzyme-adapter-react-16": "^1.11.2",
@@ -38,6 +33,7 @@
     "react-router-dom": "^4.4.0",
     "react-test-renderer": "^16.8.4",
     "sequelize": "^5.1.0",
+    "supertest": "^4.0.2",
     "volleyball": "^1.5.1",
     "webpack": "^4.29.6",
     "webpack-cli": "^3.3.0"
