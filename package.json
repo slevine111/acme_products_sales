@@ -4,7 +4,7 @@
   "description": "",
   "scripts": {
     "postinstall": "webpack",
-    "start": "node server/main.js",
+    "start": "BABEL_ENV=dev node server/main.js",
     "start:dev": "npm run start-server & npm run build-watch",
     "start-server": "nodemon server/main.js --watch server -e js,html",
     "build-watch": "BABEL_ENV=dev webpack -w",
