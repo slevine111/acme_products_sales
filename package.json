@@ -1,5 +1,5 @@
 {
-  "name": "",
+  "name": "Acme Products Sales",
   "version": "1.0.0",
   "description": "",
   "scripts": {
@@ -8,7 +8,7 @@
     "start:dev": "npm run start-server & npm run build-watch",
     "start-server": "nodemon server/main.js --watch server -e js,html",
     "build-watch": "BABEL_ENV=dev webpack -w",
-    "test": "jest ./tests/*.spec.js --watch --runInBand --silent",
+    "test": "BABEL_ENV=test jest ./tests/*.spec.js --watch --runInBand --silent",
     "seed": "node bin/runSeed.js"
   },
   "keywords": [],
