@@ -1,4 +1,5 @@
 import React, { Component } from 'react'
+import UserFormTips from './UserFormTips'
 
 class CreateProductForm extends Component {
   constructor() {
@@ -21,9 +22,9 @@ class CreateProductForm extends Component {
     }
     this.onChange = this.onChange.bind(this)
     this.onSubmit = this.onSubmit.bind(this)
-    this.updateStateFieldHasBeenClicked = this.updateStateFieldHasBeenClicked.bind(
-      this
-    )
+    this.generateFieldTextTip = UserFormTips.generateFieldTextTip.bind(this)
+    this.updateNameTextTip = UserFormTips.updateNameTextTip.bind(this)
+    this.updatePriceTextTip = UserFormTips.updatePriceTextTip.bind(this)
   }
 
   componentDidMount() {
@@ -57,34 +58,6 @@ class CreateProductForm extends Component {
     })
   }
 
-  showFieldTextTip(field) {
-    const {
-      textTips,
-      nameFieldHasBeenClicked,
-      priceFieldHasBeenClicked,
-      discountPercentageAllowed
-    } = this.state
-
-    const keep = field === 'DiscountPercentage' ? true : textTips[field] !== ''
-
-    const useRedFont = {
-      Name: textTips.Name !== '' && nameFieldHasBeenClicked,
-      Price: textTips.Name !== '' && priceFieldHasBeenClicked,
-      DiscountPercentage: !discountPercentageAllowed
-    }
-
-    return (
-      <div>
-        <small
-          className={`help-text-size ${useRedFont[field] ? 'red-font' : ''}`}
-        >
-          {keep ? textTips[field] : ''}
-        </small>
-      </div>
-    )
-  }
-
-  // eslint-disable-next-line complexity
   onChange({ target }) {
     this.setState({ [target.name]: target.value })
     if (target.name === 'DiscountPercentage') {
@@ -93,27 +66,9 @@ class CreateProductForm extends Component {
           /^([0-9]{1,2}|100)$/.test(target.value) || target.value === ''
       })
     } else if (target.name === 'Name') {
-      const textTip =
-        target.value === ''
-          ? 'Field is required'
-          : this.props.productNames.includes(target.value)
-          ? 'Product has already been added. Add another product'
-          : ''
-      this.setState(curState => {
-        curState.textTips.Name = textTip
-        return curState
-      })
+      this.updateNameTextTip(target.value)
     } else if (target.name === 'Price') {
-      const textTip =
-        target.value === ''
-          ? 'Field is required'
-          : !/^[0-9]+\.{0,1}[0-9]{0,2}$/.test(target.value)
-          ? 'Value does not match currency format (Only two decimal points at most allowed)'
-          : ''
-      this.setState(curState => {
-        curState.textTips.Price = textTip
-        return curState
-      })
+      this.updatePriceTextTip(target.value)
     }
   }
 
@@ -132,15 +87,35 @@ class CreateProductForm extends Component {
       })
   }
 
-  // eslint-disable-next-line complexity
+  createNameOrPriceField(fieldAsText, fieldValue) {
+    const fieldHasBeenClickedState = this.state[
+      `${fieldAsText.toLowerCase()}FieldHasBeenClicked`
+    ]
+    const makeBorderRed =
+      (this.state.textTips[fieldAsText] !== '' && fieldHasBeenClickedState) ||
+      !['', 'Field is required'].includes(this.state.textTips[fieldAsText])
+    return (
+      <div className="form-group">
+        <label htmlFor={fieldAsText}>{fieldAsText}</label>
+        <input
+          id={`${fieldAsText.toLowerCase()}-input`}
+          type="text"
+          className={`form-control ${makeBorderRed ? 'red-border' : ''}`}
+          name={fieldAsText}
+          value={fieldValue}
+          onChange={this.onChange}
+        />
+        {this.generateFieldTextTip(fieldAsText)}
+      </div>
+    )
+  }
+
   render() {
     const {
       Name,
       Price,
       DiscountPercentage,
       Availability,
-      nameFieldHasBeenClicked,
-      priceFieldHasBeenClicked,
       discountPercentageAllowed,
       textTips,
       error
@@ -151,38 +126,8 @@ class CreateProductForm extends Component {
       !this.state.discountPercentageAllowed
     return (
       <form onSubmit={this.onSubmit}>
-        <div className="form-group">
-          <label htmlFor="Name"> Name</label>
-          <input
-            id="name-input"
-            type="text"
-            className={`form-control ${
-              textTips.Name !== '' && nameFieldHasBeenClicked
-                ? 'red-border'
-                : ''
-            }`}
-            name="Name"
-            value={Name}
-            onChange={event => this.onChange(event)}
-          />
-          {this.showFieldTextTip('Name')}
-        </div>
-        <div className="form-group">
-          <label htmlFor="Price">Price</label>
-          <input
-            id="price-input"
-            type="text"
-            className={`form-control ${
-              textTips.Price !== '' && priceFieldHasBeenClicked
-                ? 'red-border'
-                : ''
-            }`}
-            name="Price"
-            value={Price}
-            onChange={event => this.onChange(event)}
-          />
-          {this.showFieldTextTip('Price')}
-        </div>
+        {this.createNameOrPriceField('Name', Name)}
+        {this.createNameOrPriceField('Price', Price)}
         <div className="form-group">
           <label htmlFor="DiscountPercentage">Discount Percentage</label>
           <input
@@ -192,9 +137,9 @@ class CreateProductForm extends Component {
             }`}
             name="DiscountPercentage"
             value={DiscountPercentage}
-            onChange={event => this.onChange(event)}
+            onChange={this.onChange}
           />
-          {this.showFieldTextTip('DiscountPercentage')}
+          {this.generateFieldTextTip('DiscountPercentage')}
         </div>
         <div className="form-group">
           <label htmlFor="Availability">Availability</label>
@@ -202,7 +147,7 @@ class CreateProductForm extends Component {
             className="form-control"
             name="Availability"
             value={Availability}
-            onChange={event => this.onChange(event)}
+            onChange={this.onChange}
           >
             <option>instock</option>
             <option>backordered</option>

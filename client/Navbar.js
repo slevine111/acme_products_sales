@@ -16,7 +16,8 @@ const Navbar = ({ location, products }) => {
             to="/products"
             className={`nav-link ${path === '/products' ? 'active' : ''}`}
           >
-            {`Products ${products.length}`}
+            Products{' '}
+            <span className="badge badge-primary">{products.length}</span>
           </Link>
         </li>
         <li className="nav-item">
@@ -24,9 +25,13 @@ const Navbar = ({ location, products }) => {
             to="/products/sales"
             className={`nav-link ${path === '/products/sales' ? 'active' : ''}`}
           >
-            {`Sale Products ${
-              products.filter(product => product.DiscountPercentage > 0).length
-            }`}
+            Sale Products{' '}
+            <span className="badge badge-primary">
+              {
+                products.filter(product => product.DiscountPercentage > 0)
+                  .length
+              }
+            </span>
           </Link>
         </li>
         <li className="nav-item">

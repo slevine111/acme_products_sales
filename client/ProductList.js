@@ -3,7 +3,7 @@ import Product from './Product'
 
 const ProductList = ({ products, deleteProduct }) => {
   return (
-    <ul>
+    <ul className="list-group">
       {products.map(product => (
         <Product
           key={product.id}

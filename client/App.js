@@ -33,6 +33,10 @@ class App extends Component {
 
   onSubmit(newProduct) {
     newProduct.DiscountPercentage = newProduct.DiscountPercentage || 0
+    newProduct.Name = newProduct.Name.toLowerCase()
+      .split(' ')
+      .map(word => word.replace(word[0], word[0].toUpperCase()))
+      .join(' ')
     return axios
       .post('/api/products', newProduct)
       .then(() => this.loadProducts())
@@ -77,7 +81,9 @@ class App extends Component {
               <CreateProductForm
                 onSubmit={this.onSubmit}
                 history={history}
-                productNames={products.map(product => product.Name)}
+                productNames={products.map(product =>
+                  product.Name.toLowerCase()
+                )}
               />
             )}
           />

@@ -16,7 +16,7 @@ app.get('/', (req, res) => {
 })
 
 app.get('/api/products', (req, res, next) => {
-  return Product.findAll()
+  return Product.findAll({ order: ['Name'] })
     .then(products => res.json(products))
     .catch(next)
 })

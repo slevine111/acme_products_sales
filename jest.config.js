@@ -6,3 +6,22 @@ module.exports = {
   coverageReporters: ['text', 'html'],
   verbose: true
 }
+
+/*
+,
+    "test": {
+      "presets": [
+        "react",
+        [
+          "env",
+          {
+            "targets": {
+              "browsers": ["last 2 versions"],
+              "node": "current"
+            }
+          }
+        ]
+      ],
+      "test": ["jest"]
+    }
+  }*/

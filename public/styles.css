@@ -1,3 +1,11 @@
+.product-detail {
+  margin-bottom: 15px;
+}
+
+.list-group-item .badge {
+  font-size: 1rem;
+}
+
 .on-sale {
   text-decoration: line-through;
 }
