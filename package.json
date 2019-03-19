@@ -3,8 +3,8 @@
   "version": "1.0.0",
   "description": "",
   "scripts": {
-    "postinstall": "webpack",
-    "start": "BABEL_ENV=dev node server/main.js",
+    "postinstall": "BABEL_ENV=dev webpack",
+    "start": "node server/main.js",
     "start:dev": "npm run start-server & npm run build-watch",
     "start-server": "nodemon server/main.js --watch server -e js,html",
     "build-watch": "BABEL_ENV=dev webpack -w",
