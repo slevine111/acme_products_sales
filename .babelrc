@@ -1,32 +1,6 @@
 {
-  "env": {
-    "dev": {
-      "presets": [
-        "react",
-        [
-          "env",
-          {
-            "targets": {
-              "browsers": ["last 2 versions"]
-            }
-          }
-        ]
-      ]
-    },
-    "test": {
-      "presets": [
-        "react",
-        [
-          "env",
-          {
-            "targets": {
-              "browsers": ["last 2 versions"],
-              "node": "current"
-            }
-          }
-        ]
-      ],
-      "test": ["jest"]
-    }
-  }
+  "presets": [
+    "@babel/preset-env",
+    "@babel/preset-react"
+  ]
 }
