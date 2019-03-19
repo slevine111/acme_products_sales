@@ -4,7 +4,7 @@ import Adapter from 'enzyme-adapter-react-16'
 import App from '../client/App'
 
 describe('React testing', () => {
-  before(() => {
+  beforeAll(() => {
     Enzyme.configure({ adapter: new Adapter() })
   })
 
