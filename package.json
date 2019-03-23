@@ -3,12 +3,12 @@
   "version": "1.0.0",
   "description": "",
   "scripts": {
-    "postinstall": "BABEL_ENV=dev webpack",
+    "postinstall": "webpack",
     "start": "node server/main.js",
     "start:dev": "npm run start-server & npm run build-watch",
     "start-server": "./node_modules/.bin/nodemon server/main.js --watch server -e js,html",
-    "build-watch": "BABEL_ENV=dev webpack -w",
-    "test": "BABEL_ENV=test jest ./tests/*.spec.js --watch --runInBand --silent",
+    "build-watch": "webpack -w",
+    "test": "jest ./tests/React.spec.js --watch --runInBand",
     "seed": "node bin/runSeed.js"
   },
   "keywords": [],
